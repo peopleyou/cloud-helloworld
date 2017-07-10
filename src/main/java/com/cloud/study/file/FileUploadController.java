@@ -20,9 +20,36 @@ public class FileUploadController {
         return "fileUpload.html";
     }
 
+    @RequestMapping(value = "/to-upload-process")
+    public String toUploadProcess() {
+        return "fileUploadProcess.html";
+    }
+
 
     @PostMapping(value = "/upload")
     public void upload(@RequestParam(value = "file", required = false) MultipartFile file) {
+
+        System.out.println("开始");
+        String path = "I:\\XMMZ\\file-user";
+        String fileName = file.getOriginalFilename();
+        System.out.println(path);
+        File targetFile = new File(path, fileName);
+//        if (!targetFile.exists()) {
+//            targetFile.mkdirs();
+//        }
+
+        //保存
+        try {
+            file.transferTo(targetFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("文件大小：" + targetFile.getTotalSpace());
+    }
+
+    @PostMapping(value = "/uploadProcess")
+    public void uploadProcess(@RequestParam(value = "fileToUpload", required = false) MultipartFile file) {
 
         System.out.println("开始");
         String path = "I:\\XMMZ\\file-user";
