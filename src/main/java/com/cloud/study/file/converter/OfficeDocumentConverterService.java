@@ -102,41 +102,4 @@ public class OfficeDocumentConverterService {
             }
         }
     }
-
-    public void convertFile() {
-        Process pro = null;
-        OfficeManager officeManager = null;
-        try {
-            // 启动OpenOffice的服务
-            String command = jodConverterProperties.getOfficeHome()
-                    + "\\program\\soffice.exe -headless -accept=\"socket,host=127.0.0.1,port=2002;urp;StarOffice.ServiceManager\" -nofirststartwizard";
-            pro = Runtime.getRuntime().exec(command);
-
-            DefaultOfficeManagerBuilder officeManagerBuilder = new DefaultOfficeManagerBuilder();
-            officeManagerBuilder.setOfficeHome(jodConverterProperties.getOfficeHome());
-            officeManagerBuilder.setWorkingDir(new File(jodConverterProperties.getWorkingDir()));
-            officeManager = officeManagerBuilder.build();
-
-            if (!officeManager.isRunning()) {
-                officeManager.start();
-            }
-            OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager);
-            converter.convert(new File("I:\\XMMZ\\file-user\\1.docx"),
-                    new File("I:\\XMMZ\\file-user\\1.pdf"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-//                officeManager.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (pro != null) {
-                // 封闭OpenOffice服务的进程
-                pro.destroy();
-            }
-        }
-    }
-
-
 }
