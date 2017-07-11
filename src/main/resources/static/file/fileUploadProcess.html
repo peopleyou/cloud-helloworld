@@ -52,7 +52,7 @@
         function uploadProgress(evt) {
             if (evt.lengthComputable) {
                 currentUpLoaded = evt.loaded;
-                var percentComplete = Math.round(currentSecondBytes * 100 / evt.total);
+                var percentComplete = Math.round(currentUpLoaded * 100 / evt.total);
                 document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
             }
             else {
