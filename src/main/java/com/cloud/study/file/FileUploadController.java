@@ -26,6 +26,10 @@ public class FileUploadController {
     }
 
 
+    /**
+     * 简单文件上传
+     * @param file
+     */
     @PostMapping(value = "/upload")
     public void upload(@RequestParam(value = "file", required = false) MultipartFile file) {
 
@@ -48,6 +52,10 @@ public class FileUploadController {
         System.out.println("文件大小：" + targetFile.getTotalSpace());
     }
 
+    /**
+     * 带进度条的文件上传
+     * @param file
+     */
     @PostMapping(value = "/uploadProcess")
     public void uploadProcess(@RequestParam(value = "fileToUpload", required = false) MultipartFile file) {
 
