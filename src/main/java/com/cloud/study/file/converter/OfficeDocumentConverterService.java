@@ -21,6 +21,16 @@ public class OfficeDocumentConverterService {
     @Resource
     private OfficeManager officeManager;
 
+    public void converWpsByConfig() {
+        OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager);
+        try {
+            converter.convert(new File("I:\\XMMZ\\file-user\\1.wps"),
+                    new File("I:\\XMMZ\\file-user\\wps.pdf"));
+        } catch (OfficeException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void converWordByConfig() {
         OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager);
         try {

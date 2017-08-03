@@ -20,6 +20,12 @@ public class OfficeDocumentConverterServiceTest {
     private OfficeDocumentConverterService converterService;
 
     @Test
+    public void testConvertWps() throws Exception {
+        converterService.converWpsByConfig();
+        Thread.sleep(1000*20);
+    }
+
+    @Test
     public void testConvertWord() throws Exception {
         converterService.converWordByConfig();
         Thread.sleep(1000*20);

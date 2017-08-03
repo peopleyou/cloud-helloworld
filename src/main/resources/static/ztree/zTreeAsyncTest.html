@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/plugins/zTree/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="../js/plugins/zTree/js/jquery.ztree.excheck.js"></script>
     <SCRIPT LANGUAGE="JavaScript">
         var setting = {
             async: {
@@ -14,7 +15,16 @@
                 type: "get",
                 autoParam: ["id"],
                 dataFilter: filter
+            },
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
             }
+
         };
 
         function filter(treeId, parentNode, childNodes) {
