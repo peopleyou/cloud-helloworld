@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>上传文件</title>
+</head>
+<body>
+<form action="#" method="post" enctype="multipart/form-data">
+    <input id="fileInput" type="file" name="file" />
+    <input type="submit" value="Submit" />
+</form>
+<div id='log-fileUuid' style='display: none'></div>
+
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!--spark-md5-->
+<script type="text/javascript" src="../js/plugins/spark-md5/spark-md5.min.js" ></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var md5Test = new file.fileMD5Manage();
+        $("#fileInput").on("change", function (e) {
+            md5Test.file = e.target.files[0];
+            md5Test._calMd5();
+        })
+    });
+
+    var file = {};
+    file.fileMD5Manage = function () {
+        var me = this;
+
+        me.file = null;
+
+        me._registerLog = function (str, className, log) {
+            var elem = document.createElement('div');
+
+            elem.innerHTML = str;
+            elem.className = 'alert-message' + (className ? ' '  + className : '');
+            log.appendChild(elem);
+        };
+
+        /**
+         * 计算文件md5
+         */
+        me._calMd5 = function () {
+            var log = document.getElementById('log-' + 'fileUuid');
+            running = false;
+
+            if (running) {
+                return;
+            }
+
+            var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
+                fileObj = me.file,
+                chunkSize = 2097152,                           // read in chunks of 2MB
+                chunks = Math.ceil(fileObj.size / chunkSize),
+                currentChunk = 0,
+                spark = new SparkMD5(),
+                time,
+                uniqueId = 'chunk_' + (new Date().getTime()),
+                chunkId = null,
+                fileReader = new FileReader();
+
+            fileReader.onload = function (e) {
+                if (currentChunk === 0) {
+                    me._registerLog('Read chunk number <strong id="' + uniqueId + '">' + (currentChunk + 1) + '</strong> of <strong>' + chunks + '</strong><br/>', 'info', log);
+                    console.log('Read chunk number <strong id="' + uniqueId + '">' + (currentChunk + 1) + '</strong> of <strong>' + chunks + '</strong><br/>');
+                } else {
+                    if (chunkId === null) {
+                        chunkId = document.getElementById(uniqueId);
+                    }
+
+                    chunkId.innerHTML = currentChunk + 1;
+                }
+
+                spark.appendBinary(e.target.result);                 // append array buffer
+                currentChunk += 1;
+
+                if (currentChunk < chunks) {
+                    loadNext();
+                } else {
+                    running = false;
+                    me.fileMd5 = spark.end();
+                    me._registerLog('<strong>Finished loading!</strong><br/>', 'success', log);
+                    me._registerLog('<strong>Computed hash:</strong> ' + me.fileMd5 + '<br/>', 'success', log); // compute hash
+                    me._registerLog('<strong>Total time:</strong> ' + (new Date().getTime() - time) + 'ms<br/>', 'success', log);
+
+                    console.log('<strong>Finished loading!</strong><br/>');
+                    console.log('<strong>Computed hash:</strong> ' + me.fileMd5 + '<br/>');
+                    console.log('<strong>Total time:</strong> ' + (new Date().getTime() - time) + 'ms<br/>');
+
+                    //获取文件信息，记录上传文件信息，然后直接上传
+//                    me._doAfterCalMd5();
+                }
+            };
+
+            fileReader.onerror = function () {
+                running = false;
+                me._registerLog('<strong>Oops, something went wrong.</strong>', 'error', log);
+            };
+
+            function loadNext() {
+                var start = currentChunk * chunkSize,
+                    end = start + chunkSize >= fileObj.size ? fileObj.size : start + chunkSize;
+
+                fileReader.readAsBinaryString(blobSlice.call(fileObj, start, end));
+            }
+
+            running = true;
+            me._registerLog('<p></p><strong>Starting incremental test (' + fileObj.name + ')</strong><br/>', 'info', log);
+            console.log('<p></p><strong>Starting incremental test (' + fileObj.name + ')</strong><br/>');
+            time = new Date().getTime();
+            loadNext();
+        };
+
+        return me;
+    }
+</script>
+
+</body>
+
+

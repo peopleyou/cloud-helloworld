@@ -14,7 +14,7 @@ import java.net.URLEncoder;
  * Created by 37300 on 2017/7/12.
  */
 @Controller
-@RequestMapping("file")
+@RequestMapping("/file")
 public class FilePreviewController {
     @RequestMapping(value = "/to-test-preview")
     public String toPreview() {
