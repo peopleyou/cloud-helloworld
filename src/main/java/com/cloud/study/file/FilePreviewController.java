@@ -21,6 +21,11 @@ public class FilePreviewController {
         return "pdfFilePreview.html";
     }
 
+    @RequestMapping(value = "/to-test-video-preview")
+    public String toVideoPreview() {
+        return "videoFilePreview.html";
+    }
+
     @RequestMapping(value = "/to-preview-page")
     public String previewPage(@RequestParam("file") String file) throws UnsupportedEncodingException {
         if (StringUtils.isBlank(file)) {
